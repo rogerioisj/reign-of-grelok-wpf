@@ -12,7 +12,7 @@ namespace reign_of_grelok_wpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        public ObservableCollection<string> Menu { get; }
+        public ObservableCollection<string> Menu { get; private set; }
         private Management stateManagement;
         private Inventory inventory;
         private Town town;
@@ -56,11 +56,21 @@ namespace reign_of_grelok_wpf
                     return;
                 }
 
-                /*if (type == EventType.Load)
+                if (type == EventType.Load)
                 {
-                    stageInfo = action(key);
+                    var action = stageInfo.GetLoadStageAction(key);
+                    stageInfo = action();
+
+                    MapLocaleName.Content = stageInfo.GetStageName();
+
+                    Menu.Clear();
+
+                    foreach (var menuItem in stageInfo.GetMenu())
+                    {
+                        Menu.Add(menuItem);
+                    }
                     return;
-                }*/
+                }
             }
         }
     }
