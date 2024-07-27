@@ -1,4 +1,5 @@
-﻿using System;
+﻿using reign_of_grelok_wpf.infoModel;
+using reign_of_grelok_wpf.stages;
 
 namespace reign_of_grelok_wpf.state
 {
@@ -15,7 +16,8 @@ namespace reign_of_grelok_wpf.state
         private bool brassKey;
         private bool rawGemStone;
         private bool fullFlask;
-        private List<string> itemDescriptions;
+        private Dictionary<string, InventoryItem> itens;
+        private List<StageMenuItem> menu;
 
         public Inventory()
         {
@@ -28,16 +30,48 @@ namespace reign_of_grelok_wpf.state
             brassKey = false;
             rawGemStone = false;
             fullFlask = false;
-            itemDescriptions = new List<string>();
-            itemDescriptions.Add("Sua arma. Enferrujada, mas confiável.");
-            itemDescriptions.Add("Um frasco muito pequeno para transportar água.");
-            itemDescriptions.Add("O cheiro pode torná-lo impopular...");
-            itemDescriptions.Add("Uma pedra preciosa brilhante e facetada.");
-            itemDescriptions.Add("O fragmento de gema pulsa com luz mágica...");
-            itemDescriptions.Add("Uma arma encantada para derrotar Grelok!");
-            itemDescriptions.Add("Chave dada a você pelo padre.");
-            itemDescriptions.Add("Esta pedra preciosa pode ser valiosa...");
-            itemDescriptions.Add("Seu Frasco está cheio de água benta.");
+
+            this.menu = new List<StageMenuItem>();
+            menu.Add(new StageMenuItem("Espada enferrujada", _ => this.showItemDescription("Espada enferrujada"), EventType.Text, true));
+            menu.Add(new StageMenuItem("Frasco de bebida", _ => this.showItemDescription("Espada enferrujada"), EventType.Text, true));
+
+            itens = new Dictionary<string, InventoryItem>();
+            itens.Add("Espada enferrujada", new InventoryItem("Espada enferrujada", "Sua arma. Enferrujada, mas confiável.", true));
+            itens.Add("Frasco de bebida", new InventoryItem("Frasco de bebida", "Um frasco muito pequeno para transportar água.", true));
+            itens.Add("Cabeça de zumbi", new InventoryItem("Cabeça de zumbi", "O cheiro pode torná-lo impopular...", false));
+            itens.Add("Pedra preciosa refinada", new InventoryItem("Pedra preciosa refinada", "Uma pedra preciosa brilhante e facetada.", false));
+            itens.Add("Fragmento mágico", new InventoryItem("Fragmento mágico", "O fragmento de gema pulsa com luz mágica...", false));
+            itens.Add("Espada mágica", new InventoryItem("Espada mágica", "Uma arma encantada para derrotar Grelok!", false));
+            itens.Add("Chave de latão", new InventoryItem("Chave de latão", "Chave dada a você pelo padre.", false));
+            itens.Add("Pedra preciosa bruta", new InventoryItem("Pedra preciosa bruta", "Esta pedra preciosa pode ser valiosa...", false));
+            itens.Add("Frasco de bebida cheio", new InventoryItem("Frasco de bebida cheio", "Seu Frasco está cheio de água benta.", false));
+        }
+
+        public StageInfo LoadStageInfo()
+        {
+            var availableMenu = this.getMenuAvailable();
+            var stage = new StageInfo("Inventário", availableMenu);
+
+            return stage;
+        }
+
+        private Dictionary<string, MenuItem> getMenuAvailable()
+        {
+            var menuParsed = new Dictionary<string, MenuItem>();
+
+
+
+            menu.ForEach(delegate (StageMenuItem item) {
+                if (item.isAvailable) menuParsed.Add(item.getTitle(), item.GetMenuItem());
+            });
+
+            return menuParsed;
+        }
+
+        private string showItemDescription(string key)
+        {
+            var item = itens[key];
+            return item.description;
         }
 
         public void Load(CallbackStageMenu callback)
@@ -61,10 +95,10 @@ namespace reign_of_grelok_wpf.state
             var keyInfo = Console.ReadKey();
             var key = keyInfo.KeyChar;
 
-            this.LoadOptions(key, callback);
+            //this.LoadOptions(key, callback);
         }
 
-        private void LoadOptions(char key, CallbackStageMenu callback)
+        /*private void LoadOptions(char key, CallbackStageMenu callback)
         {
             switch (key)
             {
@@ -127,7 +161,7 @@ namespace reign_of_grelok_wpf.state
                     this.Load(callback);
                     break;
             }
-        }
+        }*/
 
         private void checkIfItemISAvailable(bool item, CallbackStageMenu callback)
         {
@@ -137,16 +171,6 @@ namespace reign_of_grelok_wpf.state
                 Console.WriteLine("Opção inválida!\n\n\n");
                 this.Load(callback);
             }
-        }
-
-        private void showItemDescription(int index)
-        {
-            Console.Clear();
-            Console.WriteLine(this.itemDescriptions[index]);
-            Console.WriteLine();
-            Console.WriteLine("Pressione qualquer tecla para continuar");
-            Console.ReadKey();
-            Console.Clear();
         }
 
         public void GetZombieHead() { this.zombieHead = true; }
@@ -165,8 +189,8 @@ namespace reign_of_grelok_wpf.state
 
         public void GetGem() { this.rawGemStone = true; }
 
-        public void RefineGem() 
-        { 
+        public void RefineGem()
+        {
             this.rawGemStone = false;
             this.refinedGemStone = true;
             this.magicalShard = true;
@@ -187,5 +211,18 @@ namespace reign_of_grelok_wpf.state
         public bool HasRefinedGem() { return this.refinedGemStone; }
 
         public bool HasMagicalSword() { return this.magicSword; }
+    }
+
+    class InventoryItem
+    {
+        public string name { get; }
+        public string description { get; }
+        public bool available { get; }
+        public InventoryItem(string name, string description, bool available)
+        {
+            this.name = name;
+            this.description = description;
+            this.available = available;
+        }
     }
 }

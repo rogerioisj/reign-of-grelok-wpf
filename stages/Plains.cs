@@ -22,12 +22,12 @@ namespace reign_of_grelok_wpf.stages
             this.montainsideInstance = montainside;
 
             menu = new List<StageMenuItem>();
-            menu.Add(new StageMenuItem("Olhar ao redor", this.ShowStageMessage, EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Norte", this.ShowStageMessage, EventType.Load, true));
-            menu.Add(new StageMenuItem("Ir para Sul", this.ShowStageMessage, EventType.Load, true));
-            menu.Add(new StageMenuItem("Ir para Leste", this.ShowStageMessage, EventType.Load, true));
-            menu.Add(new StageMenuItem("Ir para Oeste", this.ShowStageMessage, EventType.Load, true));
-            menu.Add(new StageMenuItem("Inventário", this.ShowStageMessage, EventType.Load, true));
+            menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Ir para Norte", _ => this.ShowStageMessage(), EventType.Load, true));
+            menu.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Load, true));
+            menu.Add(new StageMenuItem("Ir para Leste", _ => this.ShowStageMessage(), EventType.Load, true));
+            menu.Add(new StageMenuItem("Ir para Oeste", _ => this.ShowStageMessage(), EventType.Load, true));
+            menu.Add(new StageMenuItem("Inventário", _ => this.ShowStageMessage(), EventType.Load, true));
         }
 
         public StageInfo LoadStageInfo()

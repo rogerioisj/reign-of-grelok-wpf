@@ -3,5 +3,5 @@
 namespace reign_of_grelok_wpf.stages
 {
     delegate void CallbackStageMenu();
-    delegate string MenuAction();
+    delegate string MenuAction(string? key);
 }
