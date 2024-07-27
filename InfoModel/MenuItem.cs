@@ -54,6 +54,11 @@ namespace reign_of_grelok_wpf.infoModel
             this.isAvailable = isAvailable;
         }
 
+        public StageMenuItem(string title, LoadStageAction action, EventType eventType, bool isAvailable) : base(title, action, eventType)
+        {
+            this.isAvailable = isAvailable;
+        }
+
         public MenuItem GetMenuItem() { return this; }
     }
 }
