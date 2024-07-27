@@ -1,0 +1,40 @@
+﻿<Window x:Class="reign_of_grelok_wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:reign_of_grelok_wpf"
+        mc:Ignorable="d"
+        Title="Reino de Grelok"
+        Width="720"
+        Height="640"
+        ResizeMode="NoResize">
+    
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions >
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Background="AliceBlue">
+            <Label x:Name="MapLocaleName" HorizontalAlignment="Center" Margin="20,20" FontSize="22" FontFamily="Comic Sans MS"/>
+            <ItemsControl ItemsSource="{Binding Menu}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding}" Click="EventMessageButtonChange" Margin="60, 5"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" Margin="20,20">
+            <TextBlock x:Name="EventDesciptionTextBox"  VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" TextWrapping="Wrap"/>
+        </ScrollViewer>
+    </Grid>
+    
+</Window>
