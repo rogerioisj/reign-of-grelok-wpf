@@ -62,7 +62,7 @@ namespace reign_of_grelok_wpf.state
 
 
             menu.ForEach(delegate (StageMenuItem item) {
-                if (item.isAvailable) menuParsed.Add(item.getTitle(), item.GetMenuItem());
+                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
             });
 
             return menuParsed;
