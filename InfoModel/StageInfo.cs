@@ -23,10 +23,14 @@ namespace reign_of_grelok_wpf.infoModel
         public ShowTextAction GetShowTextAction(string name) 
         {
             var item = menu[name];
-            return item.getAction();
+            return item.getTextAction();
         }
 
-        
+        /*public LoadStageAction GetLoadStageAction(string name)
+        {
+            var item = menu[name];
+            return item.getTextAction();
+        }*/
 
         public EventType GetMenuItemEventType(string name)
         {
