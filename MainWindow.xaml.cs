@@ -59,7 +59,7 @@ namespace reign_of_grelok_wpf
                 if (type == EventType.Load)
                 {
                     var action = stageInfo.GetLoadStageAction(key);
-                    stageInfo = action();
+                    stageInfo = action(null);
 
                     MapLocaleName.Content = stageInfo.GetStageName();
 
@@ -69,6 +69,9 @@ namespace reign_of_grelok_wpf
                     {
                         Menu.Add(menuItem);
                     }
+
+                    EventDesciptionTextBox.Text = "";
+
                     return;
                 }
             }
