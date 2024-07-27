@@ -25,5 +25,11 @@ namespace reign_of_grelok_wpf.infoModel
             var item = menu[name];
             return item.getAction();
         }
+
+        public EventType GetMenuItemEventType(string name)
+        {
+            var item = menu[name];
+            return item.EventType;
+        }
     }
 }
