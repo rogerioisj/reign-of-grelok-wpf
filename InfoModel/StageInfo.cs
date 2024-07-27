@@ -20,7 +20,7 @@ namespace reign_of_grelok_wpf.infoModel
 
         public List<string> GetMenu() { return menu.Keys.Cast<string>().ToList(); }
 
-        public MenuAction ShowMenuItemTextAction(string name) 
+        public MenuAction GetShowTextAction(string name) 
         {
             var item = menu[name];
             return item.getAction();

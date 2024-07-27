@@ -51,7 +51,7 @@ namespace reign_of_grelok_wpf
 
                 if (type == EventType.Text)
                 {
-                    var action = stageInfo.ShowMenuItemTextAction(key);
+                    var action = stageInfo.GetShowTextAction(key);
                     EventDesciptionTextBox.Text = action(null);
                     return;
                 }
