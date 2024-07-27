@@ -42,7 +42,7 @@ namespace reign_of_grelok_wpf.stages
         {
             var menuParsed = new Dictionary<string, MenuItem>();
             menu.ForEach(delegate (StageMenuItem item) {
-                if (item.isAvailable) menuParsed.Add(item.getTitle(), item.GetMenuItem());
+                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
             });
 
             return menuParsed;
