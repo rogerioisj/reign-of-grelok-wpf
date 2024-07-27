@@ -45,8 +45,11 @@ namespace reign_of_grelok_wpf
         {
             if (sender is Button button)
             {
-                string option = button.Content.ToString();
-                EventDesciptionTextBox.Text = $"el faucibus eros";
+                string key = button.Content.ToString();
+
+                var action = stageInfo.GetMenuItemAction(key);
+
+                EventDesciptionTextBox.Text = action();
             }
         }
     }
