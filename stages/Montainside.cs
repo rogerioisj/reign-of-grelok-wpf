@@ -72,7 +72,7 @@ namespace reign_of_grelok_wpf.stages
                 case 'i':
                 case 'I':
                     Console.Clear();
-                    this.inventoryInstance.Load(_ => this.Load(callback));
+                    //this.inventoryInstance.Load(_ => this.Load(callback));
                     break;
                 default:
                     Console.Clear();
