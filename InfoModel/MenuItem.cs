@@ -5,7 +5,7 @@ namespace reign_of_grelok_wpf.infoModel
     enum EventType
     {
         Text,
-        Stage
+        Load
     }
     class MenuItem
     {
