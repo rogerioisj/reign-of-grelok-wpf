@@ -9,20 +9,40 @@ namespace reign_of_grelok_wpf.infoModel
     }
     class MenuItem
     {
-        private readonly string Title;
-        private readonly ShowTextAction Action;
+        public string Title { get; }
+        private readonly ShowTextAction? TextAction;
+        private readonly LoadStageAction? LoadAction;
         public EventType EventType { get; }
 
         public MenuItem(string title, ShowTextAction action, EventType eventType)
         {
             this.Title = title;
-            this.Action = action;
+            this.TextAction = action;
             this.EventType = eventType;
+            this.LoadAction = null;
         }
 
-        public string getTitle() { return this.Title; }
+        public MenuItem(string title, LoadStageAction action, EventType eventType)
+        {
+            this.Title = title;
+            this.TextAction = null;
+            this.EventType = eventType;
+            this.LoadAction = action;
+        }
 
-        public ShowTextAction getAction() { return this.Action; }
+        public ShowTextAction getTextAction() 
+        {
+            if (this.TextAction == null) throw new InvalidOperationException("Method calls for an invalid type");
+
+            return this.TextAction;
+        }
+
+        public LoadStageAction getLoadAction()
+        {
+            if (this.LoadAction == null) throw new InvalidOperationException("Method calls for an invalid type");
+
+            return this.LoadAction;
+        }
     }
 
     class StageMenuItem : MenuItem
