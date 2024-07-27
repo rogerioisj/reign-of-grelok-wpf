@@ -1,7 +1,7 @@
 ﻿using System;
-using Reign_of_Grelok.state;
+using reign_of_grelok_wpf.state;
 
-namespace Reign_of_Grelok.stages
+namespace reign_of_grelok_wpf.stages
 {
     class Plains
     {

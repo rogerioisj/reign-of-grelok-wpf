@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Reign_of_Grelok.state
+namespace reign_of_grelok_wpf.state
 {
     class Management
     {

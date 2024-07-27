@@ -16,6 +16,7 @@ namespace reign_of_grelok_wpf
             DataContext = this;
             InitializeComponent();
             MapLocaleName.Content = "TEste";
+            MapLocaleName.Content = "TEste";
         }
 
         private void EventMessageButtonChange(object sender, RoutedEventArgs e)

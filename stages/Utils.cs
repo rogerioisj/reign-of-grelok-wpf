@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Reign_of_Grelok.stages
+namespace reign_of_grelok_wpf.stages
 {
     delegate void CallbackStageMenu();
 }
