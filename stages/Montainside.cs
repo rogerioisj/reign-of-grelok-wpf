@@ -1,4 +1,5 @@
-﻿using reign_of_grelok_wpf.state;
+﻿using reign_of_grelok_wpf.infoModel;
+using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
@@ -6,91 +7,49 @@ namespace reign_of_grelok_wpf.stages
     {
         private Inventory inventoryInstance;
         private Management stateManagementInstance;
+        private List<StageMenuItem> menu;
 
         public Montainside(Inventory inventory, Management management)
         {
             this.inventoryInstance = inventory;
             this.stateManagementInstance = management;
+
+            menu = new List<StageMenuItem>();
+            menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Usar espada em Grelok", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Investigar objeto brilhante", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
         }
 
-        public void Load(CallbackStageMenu callback)
+        public StageInfo LoadStageInfo()
         {
-            Console.WriteLine("REINO DE GRELOK (beta v.632)");
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("\nMontanhas");
-            Console.WriteLine("\nGrelok está aqui, vomitando heresias.");
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("Pressione de acordo com o destino:");
-            Console.WriteLine("1 - Olhar ao redor");
-            if (this.stateManagementInstance.AlreadyCheckMontainside())
-            {
-                if (this.inventoryInstance.HasMagicalSword()) Console.WriteLine("2 - Usar espada mágica em Grelok");
-                else Console.WriteLine("2 - Usar espada em Grelok");
-                if (!this.stateManagementInstance.AlreadyTakedGem()) Console.WriteLine("3 - Investigar objeto brilhante");
-            }
-            Console.WriteLine("4 - Ir para Sul");
-            Console.WriteLine("I - Iventário");
-            Console.WriteLine("Q - Sair");
-            var keyInfo = Console.ReadKey();
-            var key = keyInfo.KeyChar;
+            var availableMenu = this.getMenuAvailable();
+            var stage = new StageInfo("Planicies", availableMenu);
 
-            this.LoadOptions(key, callback);
+            return stage;
         }
 
-        private void LoadOptions(char key, CallbackStageMenu callback)
+        private Dictionary<string, MenuItem> getMenuAvailable()
         {
-            switch (key)
+            var menuParsed = new Dictionary<string, MenuItem>();
+            menu.ForEach(delegate (StageMenuItem item)
             {
-                case '1':
-                    this.ShowStageMessage();
-                    this.Load(callback);
-                    break;
-                case '2':
-                    this.CheckIfOptionIsAvailable(
-                        this.stateManagementInstance.AlreadyCheckMontainside(),
-                        callback
-                        );
-                    this.ShowAttackGrelokMessage();
-                    this.Load(callback);
-                    break;
-                case '3':
-                    this.CheckIfOptionIsAvailable(
-                        this.stateManagementInstance.AlreadyCheckMontainside() && !this.stateManagementInstance.AlreadyTakedGem(),
-                        callback
-                        );
-                    this.ShowGemMessage();
-                    this.Load(callback);
-                    break;
-                case '4':
-                    Console.Clear();
-                    callback();
-                    break;
-                case 'q':
-                case 'Q':
-                    Environment.Exit(0);
-                    break;
-                case 'i':
-                case 'I':
-                    Console.Clear();
-                    //this.inventoryInstance.Load(_ => this.Load(callback));
-                    break;
-                default:
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!\n\n\n");
-                    this.Load(callback);
-                    break;
-            }
+                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
+            });
+
+            return menuParsed;
         }
 
-        private void ShowStageMessage()
+        private string ShowStageMessage()
         {
             if (this.stateManagementInstance.AlreadyTakedGem())
             {
-                this.ShowWithoutGemStageMessage();
-                return;
+                return this.ShowWithoutGemStageMessage();
             }
 
-            this.ShowStandardStageMessage();
+            return this.ShowStandardStageMessage();
         }
 
         private void ShowAttackGrelokMessage()
@@ -135,38 +94,25 @@ namespace reign_of_grelok_wpf.stages
             Environment.Exit(0);
         }
 
-        private void ShowStandardStageMessage()
+        private string ShowStandardStageMessage()
         {
-            Console.Clear();
-            Console.WriteLine("Você olha ao seu redor...\n\n");
-            Console.WriteLine(
+            this.stateManagementInstance.SeeMontainside();
+
+            return "Você olha ao seu redor...\n\n" +
                 "Você está na face escarpada e castigada pelo vento de uma montanha. " +
                 "Nuvens de tempestade serpenteiam acima do cume, atingindo você e a vegetação esparsa com chuvas torrenciais. " +
                 "Muito abaixo, além do sopé, uma ampla planície se estende pelo horizonte sul.\r\n\r\n" +
                 "Grelok está aqui, vomitando heresias.\r\n\r\n" +
-                "Um brilho entre as rochas chama sua atenção."
-            );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
-            this.stateManagementInstance.SeeMontainside();
+                "Um brilho entre as rochas chama sua atenção.";
         }
 
-        private void ShowWithoutGemStageMessage()
+        private string ShowWithoutGemStageMessage()
         {
-            Console.Clear();
-            Console.WriteLine("Você olha ao seu redor...\n\n");
-            Console.WriteLine(
-                "Você está na face escarpada e castigada pelo vento de uma montanha. " +
+            return "Você olha ao seu redor...\n\n" +
+            "Você está na face escarpada e castigada pelo vento de uma montanha. " +
                 "Nuvens de tempestade serpenteiam acima do cume, atingindo você e a vegetação esparsa com chuvas torrenciais. " +
                 "Muito abaixo, além do sopé, uma ampla planície se estende pelo horizonte sul.\r\n\r\n" +
-                "Grelok está aqui, vomitando heresias.\r\n\r"
-            );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
+                "Grelok está aqui, vomitando heresias.\r\n\r";
         }
 
         private void CheckIfOptionIsAvailable(bool option, CallbackStageMenu callback)
@@ -175,7 +121,7 @@ namespace reign_of_grelok_wpf.stages
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida!\n\n\n");
-                this.Load(callback);
+                //this.Load(callback);
             }
         }
 
