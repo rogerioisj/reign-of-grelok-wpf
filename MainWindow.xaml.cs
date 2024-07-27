@@ -47,9 +47,15 @@ namespace reign_of_grelok_wpf
             {
                 string key = button.Content.ToString();
 
-                var action = stageInfo.GetMenuItemAction(key);
+                var type = stageInfo.GetMenuItemEventType(key);
 
-                EventDesciptionTextBox.Text = action();
+                if (type == EventType.Text)
+                {
+                    var action = stageInfo.GetMenuItemAction(key);
+
+                    EventDesciptionTextBox.Text = action();
+                    return;
+                }
             }
         }
     }
