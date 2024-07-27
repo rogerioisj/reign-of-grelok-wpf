@@ -21,16 +21,6 @@ namespace reign_of_grelok_wpf.state
 
         public Inventory()
         {
-            rustSword = true;
-            drinkingFlask = true;
-            zombieHead = false;
-            refinedGemStone = false;
-            magicalShard = false;
-            magicSword = false;
-            brassKey = false;
-            rawGemStone = false;
-            fullFlask = false;
-
             this.menu = new List<StageMenuItem>();
             menu.Add(new StageMenuItem("Espada enferrujada", _ => this.showItemDescription("Espada enferrujada"), EventType.Text, true));
             menu.Add(new StageMenuItem("Frasco de bebida", _ => this.showItemDescription("Frasco de bebida"), EventType.Text, true));
@@ -47,23 +37,23 @@ namespace reign_of_grelok_wpf.state
             itens.Add("Frasco de bebida cheio", new InventoryItem("Frasco de bebida cheio", "Seu Frasco está cheio de água benta.", false));
         }
 
-        public StageInfo LoadStageInfo()
+        public StageInfo LoadStageInfo(LoadStageAction backEvent)
         {
-            var availableMenu = this.getMenuAvailable();
+            var availableMenu = this.getMenuAvailable(backEvent);
             var stage = new StageInfo("Inventário", availableMenu);
 
             return stage;
         }
 
-        private Dictionary<string, MenuItem> getMenuAvailable()
+        private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backEvent)
         {
             var menuParsed = new Dictionary<string, MenuItem>();
-
-
 
             menu.ForEach(delegate (StageMenuItem item) {
                 if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
             });
+
+            menuParsed.Add("Voltar", new MenuItem("Voltar", backEvent, EventType.Load));
 
             return menuParsed;
         }
@@ -80,7 +70,6 @@ namespace reign_of_grelok_wpf.state
             {
                 Console.Clear();
                 Console.WriteLine("Opção inválida!\n\n\n");
-                //this.Load(callback);
             }
         }
 
