@@ -10,10 +10,10 @@ namespace reign_of_grelok_wpf.infoModel
     class MenuItem
     {
         private readonly string Title;
-        private readonly MenuAction Action;
+        private readonly ShowTextAction Action;
         public EventType EventType { get; }
 
-        public MenuItem(string title, MenuAction action, EventType eventType)
+        public MenuItem(string title, ShowTextAction action, EventType eventType)
         {
             this.Title = title;
             this.Action = action;
@@ -22,14 +22,14 @@ namespace reign_of_grelok_wpf.infoModel
 
         public string getTitle() { return this.Title; }
 
-        public MenuAction getAction() { return this.Action; }
+        public ShowTextAction getAction() { return this.Action; }
     }
 
     class StageMenuItem : MenuItem
     {
         public bool isAvailable {  get; }
 
-        public StageMenuItem(string title, MenuAction action, EventType eventType, bool isAvailable) : base(title, action, eventType)
+        public StageMenuItem(string title, ShowTextAction action, EventType eventType, bool isAvailable) : base(title, action, eventType)
         {
             this.isAvailable = isAvailable;
         }
