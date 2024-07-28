@@ -43,6 +43,13 @@ namespace reign_of_grelok_wpf
 
         private void MenuUpdated(object sender, EventArgs e)
         {
+            if (stateManagement.AlreadyFinishedGame())
+            {
+                Menu.Clear();
+                MapLocaleName.Content = "FIM!";
+                return;
+            }
+
             stageInfo = ((IStage)sender).LoadStageInfo(_ => plains.LoadStageInfo());
 
             Menu.Clear();

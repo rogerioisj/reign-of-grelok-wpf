@@ -84,6 +84,10 @@ namespace reign_of_grelok_wpf.stages
 
         private string ShowMagicalSwordAttackMessage()
         {
+            stateManagementInstance.FinishGame();
+
+            OnMenuUpdated();
+
             return
                 "Quando você desembainha sua espada, Grelok abaixa sua grande cabeça com chifres e solta uma risada na sua cara. " +
                 "Você cerra os dentes e desfere um golpe poderoso com as duas mãos, a lâmina mágica ressoando claramente, mesmo em meio ao tumulto de gargalhadas guturais.\r\n\r\n" +
