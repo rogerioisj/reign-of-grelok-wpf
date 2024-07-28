@@ -3,8 +3,10 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
-    class Montainside
+    class Montainside : IStage
     {
+        public event EventHandler MenuUpdated;
+
         private Inventory inventoryInstance;
         private Management stateManagementInstance;
         private StageMenuItem lookAround;
@@ -120,7 +122,13 @@ namespace reign_of_grelok_wpf.stages
             this.inventoryInstance.GetGem();
             this.stateManagementInstance.GetRawGem();
             lookGem.isAvailable = false;
+            OnMenuUpdated();
             return "Você pega uma pedra preciosa bruta das rochas!";
+        }
+
+        protected virtual void OnMenuUpdated()
+        {
+            MenuUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
