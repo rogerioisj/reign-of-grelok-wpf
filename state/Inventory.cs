@@ -7,34 +7,40 @@ namespace reign_of_grelok_wpf.state
 
     class Inventory
     {
-        private bool rustSword;
-        private bool drinkingFlask;
-        private bool zombieHead;
-        private bool refinedGemStone;
-        private bool magicalShard;
-        private bool magicSword;
-        private bool brassKey;
-        private bool rawGemStone;
-        private bool fullFlask;
+        private InventoryItem rustSword;
+        private InventoryItem drinkingFlask;
+        private InventoryItem zombieHead;
+        private InventoryItem refinedGemStone;
+        private InventoryItem magicalShard;
+        private InventoryItem magicSword;
+        private InventoryItem brassKey;
+        private InventoryItem rawGemStone;
+        private InventoryItem fullFlask;
         private Dictionary<string, InventoryItem> itens;
-        private List<StageMenuItem> menu;
 
         public Inventory()
         {
-            this.menu = new List<StageMenuItem>();
-            menu.Add(new StageMenuItem("Espada enferrujada", _ => this.showItemDescription("Espada enferrujada"), EventType.Text, true));
-            menu.Add(new StageMenuItem("Frasco de bebida", _ => this.showItemDescription("Frasco de bebida"), EventType.Text, true));
+            rustSword = new InventoryItem("Espada enferrujada", "Sua arma. Enferrujada, mas confiável.", true);
+            drinkingFlask = new InventoryItem("Frasco de bebida", "Um frasco muito pequeno para transportar água.", true);
+            zombieHead = new InventoryItem("Cabeça de zumbi", "O cheiro pode torná-lo impopular...", false);
+            refinedGemStone = new InventoryItem("Pedra preciosa refinada", "Uma pedra preciosa brilhante e facetada.", false);
+            magicalShard = new InventoryItem("Fragmento mágico", "O fragmento de gema pulsa com luz mágica...", false);
+            magicSword = new InventoryItem("Espada mágica", "Uma arma encantada para derrotar Grelok!", false);
+            brassKey = new InventoryItem("Chave de latão", "Chave dada a você pelo padre.", false);
+            rawGemStone = new InventoryItem("Pedra preciosa bruta", "Esta pedra preciosa pode ser valiosa...", false);
+            fullFlask = new InventoryItem("Frasco de bebida cheio", "Seu Frasco está cheio de água benta.", false);
+
 
             itens = new Dictionary<string, InventoryItem>();
-            itens.Add("Espada enferrujada", new InventoryItem("Espada enferrujada", "Sua arma. Enferrujada, mas confiável.", true));
-            itens.Add("Frasco de bebida", new InventoryItem("Frasco de bebida", "Um frasco muito pequeno para transportar água.", true));
-            itens.Add("Cabeça de zumbi", new InventoryItem("Cabeça de zumbi", "O cheiro pode torná-lo impopular...", false));
-            itens.Add("Pedra preciosa refinada", new InventoryItem("Pedra preciosa refinada", "Uma pedra preciosa brilhante e facetada.", false));
-            itens.Add("Fragmento mágico", new InventoryItem("Fragmento mágico", "O fragmento de gema pulsa com luz mágica...", false));
-            itens.Add("Espada mágica", new InventoryItem("Espada mágica", "Uma arma encantada para derrotar Grelok!", false));
-            itens.Add("Chave de latão", new InventoryItem("Chave de latão", "Chave dada a você pelo padre.", false));
-            itens.Add("Pedra preciosa bruta", new InventoryItem("Pedra preciosa bruta", "Esta pedra preciosa pode ser valiosa...", false));
-            itens.Add("Frasco de bebida cheio", new InventoryItem("Frasco de bebida cheio", "Seu Frasco está cheio de água benta.", false));
+            itens.Add(rustSword.name, rustSword);
+            itens.Add(drinkingFlask.name, drinkingFlask);
+            itens.Add(zombieHead.name, zombieHead);
+            itens.Add(refinedGemStone.name, refinedGemStone);
+            itens.Add(magicalShard.name, magicalShard);
+            itens.Add(magicSword.name, magicSword);
+            itens.Add(brassKey.name, brassKey);
+            itens.Add(rawGemStone.name, rawGemStone);
+            itens.Add(fullFlask.name, fullFlask);
         }
 
         public StageInfo LoadStageInfo(LoadStageAction backEvent)
@@ -49,8 +55,8 @@ namespace reign_of_grelok_wpf.state
         {
             var menuParsed = new Dictionary<string, MenuItem>();
 
-            menu.ForEach(delegate (StageMenuItem item) {
-                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
+            itens.Keys.ToList().ForEach(delegate (string key) {
+                if (itens[key].available) menuParsed.Add(itens[key].name, new MenuItem(itens[key].name, _ => this.showItemDescription(itens[key].name), EventType.Text));
             });
 
             menuParsed.Add("Voltar", new MenuItem("Voltar", backEvent, EventType.Load));
@@ -64,60 +70,51 @@ namespace reign_of_grelok_wpf.state
             return item.description;
         }
 
-        private void checkIfItemISAvailable(bool item, CallbackStageMenu callback)
-        {
-            if (!item)
-            {
-                Console.Clear();
-                Console.WriteLine("Opção inválida!\n\n\n");
-            }
-        }
-
-        public void GetZombieHead() { this.zombieHead = true; }
+        public void GetZombieHead() { this.zombieHead.available = true; }
 
         public void FulfillFlask()
         {
-            this.drinkingFlask = false;
-            this.fullFlask = true;
+            this.drinkingFlask.available = false;
+            this.fullFlask.available = true;
         }
 
         public void GetKey()
         {
-            this.brassKey = true;
-            this.zombieHead = false;
+            this.brassKey.available = true;
+            this.zombieHead.available = false;
         }
 
-        public void GetGem() { this.rawGemStone = true; }
+        public void GetGem() { this.rawGemStone.available = true; }
 
         public void RefineGem()
         {
-            this.rawGemStone = false;
-            this.refinedGemStone = true;
-            this.magicalShard = true;
+            this.rawGemStone.available = false;
+            this.refinedGemStone.available = true;
+            this.magicalShard.available = true;
         }
 
         public void ForgeMagicalSword()
         {
-            this.magicSword = true;
-            this.rustSword = false;
-            this.magicalShard = false;
-            this.refinedGemStone = false;
+            this.magicSword.available = true;
+            this.rustSword.available = false;
+            this.magicalShard.available = false;
+            this.refinedGemStone.available = false;
         }
 
-        public bool HasZombieHead() { return this.zombieHead; }
+        public bool HasZombieHead() { return this.zombieHead.available; }
 
-        public bool HasKey() { return this.brassKey; }
+        public bool HasKey() { return this.brassKey.available; }
 
-        public bool HasRefinedGem() { return this.refinedGemStone; }
+        public bool HasRefinedGem() { return this.refinedGemStone.available; }
 
-        public bool HasMagicalSword() { return this.magicSword; }
+        public bool HasMagicalSword() { return this.magicSword.available; }
     }
 
     class InventoryItem
     {
         public string name { get; }
         public string description { get; }
-        public bool available { get; }
+        public bool available { get; set; }
         public InventoryItem(string name, string description, bool available)
         {
             this.name = name;
