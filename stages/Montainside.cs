@@ -15,10 +15,11 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
-        public Montainside(Inventory inventory, Management management)
+        public Montainside(Inventory inventory, Management management, EventHandler handler)
         {
             this.inventoryInstance = inventory;
             this.stateManagementInstance = management;
+            this.MenuUpdated = handler;
 
             lookAround = new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true);
             spade = new StageMenuItem("Atacar Grelok!", _ => this.ShowAttackGrelokMessage(), EventType.Text, true);
