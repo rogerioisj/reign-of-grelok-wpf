@@ -28,10 +28,8 @@ namespace reign_of_grelok_wpf
             town = new Town(inventory, stateManagement);
             chapel = new Chapel(inventory, stateManagement);
             swamp = new Swamp(inventory, stateManagement);
-            montainside = new Montainside(inventory, stateManagement);
+            montainside = new Montainside(inventory, stateManagement, MenuUpdated);
             plains = new Plains(inventory, town, chapel, swamp, montainside);
-
-            montainside.MenuUpdated += MenuUpdated;
 
             stageInfo = plains.LoadStageInfo();
 
