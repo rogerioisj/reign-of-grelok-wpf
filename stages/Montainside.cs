@@ -7,18 +7,26 @@ namespace reign_of_grelok_wpf.stages
     {
         private Inventory inventoryInstance;
         private Management stateManagementInstance;
-        private List<StageMenuItem> menu;
+        private StageMenuItem lookAround;
+        private StageMenuItem spade;
+        private StageMenuItem lookGem;
+        private List<StageMenuItem> menuItemList;
+        private Dictionary<string, MenuItem> menuToBeExported;
 
         public Montainside(Inventory inventory, Management management)
         {
             this.inventoryInstance = inventory;
             this.stateManagementInstance = management;
 
-            menu = new List<StageMenuItem>();
-            menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowAttackGrelokMessage(), EventType.Text, false));
-            menu.Add(new StageMenuItem("Usar espada em Grelok", _ => this.ShowAttackGrelokMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Investigar objeto brilhante", _ => this.ShowGemMessage(), EventType.Text, true));
+            lookAround = new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true);
+            spade = new StageMenuItem("Atacar Grelok!", _ => this.ShowAttackGrelokMessage(), EventType.Text, true);
+            lookGem = new StageMenuItem("Investigar objeto brilhante", _ => this.ShowGemMessage(), EventType.Text, true);
+
+            menuToBeExported = new Dictionary<string, MenuItem>();
+            menuItemList = new List<StageMenuItem>();
+            menuItemList.Add(lookAround);
+            menuItemList.Add(spade);
+            menuItemList.Add(lookGem);
         }
 
         public StageInfo LoadStageInfo(LoadStageAction backAction)
@@ -31,16 +39,19 @@ namespace reign_of_grelok_wpf.stages
 
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
-            var menuParsed = new Dictionary<string, MenuItem>();
-            menu.ForEach(delegate (StageMenuItem item)
+            menuToBeExported.Clear();
+            menuItemList.ForEach(delegate (StageMenuItem item)
             {
-                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
+                if (item.isAvailable)
+                {
+                    menuToBeExported.Add(item.Title, item.GetMenuItem());
+                }
             });
 
-            menuParsed.Add("Ir para Sul", new MenuItem("Ir para Sul", _ => backAction(null), EventType.Load));
-            menuParsed.Add("Inventário", new MenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo(backAction)), EventType.Load));
+            menuToBeExported.Add("Ir para Sul", new MenuItem("Ir para Sul", _ => backAction(null), EventType.Load));
+            menuToBeExported.Add("Inventário", new MenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo(backAction)), EventType.Load));
 
-            return menuParsed;
+            return menuToBeExported;
         }
 
         private string ShowStageMessage()
@@ -108,6 +119,7 @@ namespace reign_of_grelok_wpf.stages
         {
             this.inventoryInstance.GetGem();
             this.stateManagementInstance.GetRawGem();
+            lookGem.isAvailable = false;
             return "Você pega uma pedra preciosa bruta das rochas!";
         }
     }
