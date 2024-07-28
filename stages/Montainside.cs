@@ -16,28 +16,29 @@ namespace reign_of_grelok_wpf.stages
 
             menu = new List<StageMenuItem>();
             menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowStageMessage(), EventType.Text, false));
             menu.Add(new StageMenuItem("Usar espada em Grelok", _ => this.ShowStageMessage(), EventType.Text, true));
             menu.Add(new StageMenuItem("Investigar objeto brilhante", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
         }
 
-        public StageInfo LoadStageInfo()
+        public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
-            var availableMenu = this.getMenuAvailable();
+            var availableMenu = this.getMenuAvailable(backAction);
             var stage = new StageInfo("Planicies", availableMenu);
 
             return stage;
         }
 
-        private Dictionary<string, MenuItem> getMenuAvailable()
+        private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
             var menuParsed = new Dictionary<string, MenuItem>();
             menu.ForEach(delegate (StageMenuItem item)
             {
                 if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
             });
+
+            menuParsed.Add("Ir para Sul", new MenuItem("Ir para Sul", _ => backAction(null), EventType.Load));
+            menuParsed.Add("Inventário", new MenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo(backAction)), EventType.Load));
 
             return menuParsed;
         }

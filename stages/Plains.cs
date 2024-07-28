@@ -22,7 +22,7 @@ namespace reign_of_grelok_wpf.stages
 
             menu = new List<StageMenuItem>();
             menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Norte", _ => this.montainsideInstance.LoadStageInfo(), EventType.Load, true));
+            menu.Add(new StageMenuItem("Ir para Norte", _ => this.montainsideInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
             menu.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Text, true));
             menu.Add(new StageMenuItem("Ir para Leste", _ => this.ShowStageMessage(), EventType.Text, true));
             menu.Add(new StageMenuItem("Ir para Oeste", _ => this.ShowStageMessage(), EventType.Text, true));
