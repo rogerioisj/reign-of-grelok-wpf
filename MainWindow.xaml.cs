@@ -31,6 +31,8 @@ namespace reign_of_grelok_wpf
             montainside = new Montainside(inventory, stateManagement);
             plains = new Plains(inventory, town, chapel, swamp, montainside);
 
+            montainside.MenuUpdated += MenuUpdated;
+
             stageInfo = plains.LoadStageInfo();
 
             Menu = new ObservableCollection<string>(stageInfo.GetMenu());
@@ -39,6 +41,17 @@ namespace reign_of_grelok_wpf
             InitializeComponent();
 
             MapLocaleName.Content = stageInfo.GetStageName();
+        }
+
+        private void MenuUpdated(object sender, EventArgs e)
+        {
+            stageInfo = ((IStage)sender).LoadStageInfo(_ => plains.LoadStageInfo());
+
+            Menu.Clear();
+            foreach (var menuItem in stageInfo.GetMenu())
+            {
+                Menu.Add(menuItem);
+            }
         }
 
         private void EventMessageButtonChange(object sender, RoutedEventArgs e)
