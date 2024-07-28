@@ -56,7 +56,8 @@ namespace reign_of_grelok_wpf.state
             var menuParsed = new Dictionary<string, MenuItem>();
 
             itens.Keys.ToList().ForEach(delegate (string key) {
-                if (itens[key].available) menuParsed.Add(itens[key].name, new MenuItem(itens[key].name, _ => this.showItemDescription(itens[key].name), EventType.Text));
+                if (itens[key].available)
+                    menuParsed.Add(itens[key].name, new MenuItem(itens[key].name, _ => this.showItemDescription(itens[key].name), EventType.Text));
             });
 
             menuParsed.Add("Voltar", new MenuItem("Voltar", backEvent, EventType.Load));
