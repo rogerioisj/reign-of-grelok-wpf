@@ -10,7 +10,8 @@ namespace reign_of_grelok_wpf.stages
         private Chapel chapelInstance;
         private Swamp swampInstance;
         private Montainside montainsideInstance;
-        private List<StageMenuItem> menu;
+        private List<StageMenuItem> menuItemList;
+        private Dictionary<string, MenuItem> menuToBeExported;
 
         public Plains(Inventory inventoryInstance, Town town, Chapel chapel, Swamp swamp, Montainside montainside)
         {
@@ -20,13 +21,14 @@ namespace reign_of_grelok_wpf.stages
             this.swampInstance = swamp;
             this.montainsideInstance = montainside;
 
-            menu = new List<StageMenuItem>();
-            menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Norte", _ => this.montainsideInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
-            menu.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Leste", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Ir para Oeste", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
+            menuToBeExported = new Dictionary<string, MenuItem>();
+            menuItemList = new List<StageMenuItem>();
+            menuItemList.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
+            menuItemList.Add(new StageMenuItem("Ir para Norte", _ => this.montainsideInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
+            menuItemList.Add(new StageMenuItem("Ir para Sul", _ => this.ShowStageMessage(), EventType.Text, true));
+            menuItemList.Add(new StageMenuItem("Ir para Leste", _ => this.ShowStageMessage(), EventType.Text, true));
+            menuItemList.Add(new StageMenuItem("Ir para Oeste", _ => this.ShowStageMessage(), EventType.Text, true));
+            menuItemList.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
         }
 
         public StageInfo LoadStageInfo()
@@ -39,12 +41,12 @@ namespace reign_of_grelok_wpf.stages
 
         private Dictionary<string, MenuItem> getMenuAvailable()
         {
-            var menuParsed = new Dictionary<string, MenuItem>();
-            menu.ForEach(delegate (StageMenuItem item) {
-                if (item.isAvailable) menuParsed.Add(item.Title, item.GetMenuItem());
+            menuToBeExported = new Dictionary<string, MenuItem>();
+            menuItemList.ForEach(delegate (StageMenuItem item) {
+                if (item.isAvailable) menuToBeExported.Add(item.Title, item.GetMenuItem());
             });
 
-            return menuParsed;
+            return menuToBeExported;
         }
 
         private string ShowStageMessage()
