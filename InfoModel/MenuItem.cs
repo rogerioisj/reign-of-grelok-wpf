@@ -47,7 +47,7 @@ namespace reign_of_grelok_wpf.infoModel
 
     class StageMenuItem : MenuItem
     {
-        public bool isAvailable {  get; }
+        public bool isAvailable { get; set; }
 
         public StageMenuItem(string title, ShowTextAction action, EventType eventType, bool isAvailable) : base(title, action, eventType)
         {
