@@ -16,9 +16,9 @@ namespace reign_of_grelok_wpf.stages
 
             menu = new List<StageMenuItem>();
             menu.Add(new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowStageMessage(), EventType.Text, false));
-            menu.Add(new StageMenuItem("Usar espada em Grelok", _ => this.ShowStageMessage(), EventType.Text, true));
-            menu.Add(new StageMenuItem("Investigar objeto brilhante", _ => this.ShowStageMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Usar espada mágica em Grelok", _ => this.ShowAttackGrelokMessage(), EventType.Text, false));
+            menu.Add(new StageMenuItem("Usar espada em Grelok", _ => this.ShowAttackGrelokMessage(), EventType.Text, true));
+            menu.Add(new StageMenuItem("Investigar objeto brilhante", _ => this.ShowGemMessage(), EventType.Text, true));
         }
 
         public StageInfo LoadStageInfo(LoadStageAction backAction)
@@ -53,31 +53,24 @@ namespace reign_of_grelok_wpf.stages
             return this.ShowStandardStageMessage();
         }
 
-        private void ShowAttackGrelokMessage()
+        private string ShowAttackGrelokMessage()
         {
             if (this.inventoryInstance.HasMagicalSword())
             {
-                this.ShowMagicalSwordAttackMessage();
-                return;
+                return this.ShowMagicalSwordAttackMessage();
             }
 
-            this.ShowStandardAttackMessage();
+            return this.ShowStandardAttackMessage();
         }
 
-        private void ShowStandardAttackMessage()
+        private string ShowStandardAttackMessage()
         {
-            Console.Clear();
-            Console.WriteLine("Suas armas insignificantes são inúteis em Grelok.");
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
+            return "Suas armas insignificantes são inúteis em Grelok.";
         }
 
-        private void ShowMagicalSwordAttackMessage()
+        private string ShowMagicalSwordAttackMessage()
         {
-            Console.Clear();
-            Console.WriteLine(
+            return
                 "Quando você desembainha sua espada, Grelok abaixa sua grande cabeça com chifres e solta uma risada na sua cara. " +
                 "Você cerra os dentes e desfere um golpe poderoso com as duas mãos, a lâmina mágica ressoando claramente, mesmo em meio ao tumulto de gargalhadas guturais.\r\n\r\n" +
                 "Você balança a espada com tanta força que ela escapa de suas mãos e cai na boca aberta da monstruosidade, perdida de vista na escuridão árida da garganta de Grelok. " +
@@ -87,12 +80,7 @@ namespace reign_of_grelok_wpf.stages
                 "O Toque pode ser ouvido claramente agora, e enquanto a força vital escorre ao redor da ponta saliente da espada mágica, as nuvens de tempestade que rodopiam no pico já estão se dissipando. " +
                 "Grelok foi derrotado!\r\n\r\n " +
                 "FIM\r\n " +
-                "(Obrigado por jogar!)"
-            );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Environment.Exit(0);
+                "(Obrigado por jogar!)";
         }
 
         private string ShowStandardStageMessage()
@@ -116,26 +104,11 @@ namespace reign_of_grelok_wpf.stages
                 "Grelok está aqui, vomitando heresias.\r\n\r";
         }
 
-        private void CheckIfOptionIsAvailable(bool option, CallbackStageMenu callback)
+        private string ShowGemMessage()
         {
-            if (!option)
-            {
-                Console.Clear();
-                Console.WriteLine("Opção inválida!\n\n\n");
-                //this.Load(callback);
-            }
-        }
-
-        private void ShowGemMessage()
-        {
-            Console.Clear();
-            Console.WriteLine("Você pega uma pedra preciosa bruta das rochas!");
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
             this.inventoryInstance.GetGem();
             this.stateManagementInstance.GetRawGem();
+            return "Você pega uma pedra preciosa bruta das rochas!";
         }
     }
 }
