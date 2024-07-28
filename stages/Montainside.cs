@@ -17,13 +17,13 @@ namespace reign_of_grelok_wpf.stages
 
         public Montainside(Inventory inventory, Management management, EventHandler handler)
         {
-            this.inventoryInstance = inventory;
-            this.stateManagementInstance = management;
-            this.MenuUpdated = handler;
+            inventoryInstance = inventory;
+            stateManagementInstance = management;
+            MenuUpdated = handler;
 
-            lookAround = new StageMenuItem("Olhar ao redor", _ => this.ShowStageMessage(), EventType.Text, true);
-            spade = new StageMenuItem("Atacar Grelok!", _ => this.ShowAttackGrelokMessage(), EventType.Text, true);
-            lookGem = new StageMenuItem("Investigar objeto brilhante", _ => this.ShowGemMessage(), EventType.Text, true);
+            lookAround = new StageMenuItem("Olhar ao redor", _ => ShowStageMessage(), EventType.Text, true);
+            spade = new StageMenuItem("Atacar Grelok!", _ => ShowAttackGrelokMessage(), EventType.Text, true);
+            lookGem = new StageMenuItem("Investigar objeto brilhante", _ => ShowGemMessage(), EventType.Text, true);
 
             menuToBeExported = new Dictionary<string, MenuItem>();
             menuItemList = new List<StageMenuItem>();
@@ -34,8 +34,8 @@ namespace reign_of_grelok_wpf.stages
 
         public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
-            var availableMenu = this.getMenuAvailable(backAction);
-            var stage = new StageInfo("Planicies", availableMenu);
+            var availableMenu = getMenuAvailable(backAction);
+            var stage = new StageInfo("Montanhas", availableMenu);
 
             return stage;
         }

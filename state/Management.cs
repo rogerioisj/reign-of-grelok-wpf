@@ -11,6 +11,7 @@ namespace reign_of_grelok_wpf.state
         private bool hasTalkedToWizard;
         private bool hasKilledZombie;
         private bool hasUsedKey;
+        private bool hasTakedZombieHead;
         private bool hasTakedGem;
         private bool hasClearGem;
         private bool hasFinishedGame;
@@ -27,44 +28,48 @@ namespace reign_of_grelok_wpf.state
             hasFinishedGame = false;
         }
 
-        public void SeeTown() { this.hasSawTown = true; }
+        public void SeeTown() { hasSawTown = true; }
 
-        public void SeeChapel() { this.hasSawChapel = true; }
+        public void SeeChapel() { hasSawChapel = true; }
 
-        public void SeeSwamp() { this.hasSawSwamp = true; }
+        public void SeeSwamp() { hasSawSwamp = true; }
 
-        public void SeeMontainside() { this.hasSawMontainside = true; }
+        public void SeeMontainside() { hasSawMontainside = true; }
 
-        public void KillZombie() { this.hasKilledZombie = true; }
+        public void KillZombie() { hasKilledZombie = true; }
 
-        public void UseKey() { this.hasUsedKey = true; }
+        public void GetZombieHead() { hasTakedZombieHead = true; }
 
-        public void GetRawGem() { this.hasTakedGem = true; }
+        public void UseKey() { hasUsedKey = true; }
 
-        public void TalkToWizard() {  this.hasTalkedToWizard = true; }
+        public void GetRawGem() { hasTakedGem = true; }
 
-        public void ClearGem() {  this.hasClearGem = true; }
+        public void TalkToWizard() {  hasTalkedToWizard = true; }
 
-        public void FinishGame() { this.hasFinishedGame = true; }
+        public void ClearGem() {  hasClearGem = true; }
 
-        public bool AlreadyCheckTown() { return this.hasSawTown; }
+        public void FinishGame() { hasFinishedGame = true; }
 
-        public bool AlreadyCheckChapel() { return this.hasSawChapel; }
+        public bool AlreadyCheckTown() { return hasSawTown; }
 
-        public bool AlreadyCheckSwamp() { return this.hasSawSwamp; }
+        public bool AlreadyCheckChapel() { return hasSawChapel; }
 
-        public bool AlreadyCheckMontainside() { return this.hasSawMontainside; }
+        public bool AlreadyCheckSwamp() { return hasSawSwamp; }
 
-        public bool AlreadyKilledZombie() { return this.hasKilledZombie; }
+        public bool AlreadyCheckMontainside() { return hasSawMontainside; }
 
-        public bool AlreadyUsedKey() { return this.hasUsedKey; }
+        public bool AlreadyKilledZombie() { return hasKilledZombie; }
 
-        public bool AlreadyTalkedToWizard() { return this.hasTalkedToWizard; }
+        public bool AlreadyUsedKey() { return hasUsedKey; }
 
-        public bool AlreadyTakedGem() { return this.hasTakedGem; }
+        public bool AlreadyTalkedToWizard() { return hasTalkedToWizard; }
 
-        public bool AlreadyClearGem() { return this.hasClearGem; }
+        public bool AlreadyTakedGem() { return hasTakedGem; }
 
-        public bool AlreadyFinishedGame() { return this.hasFinishedGame; }
+        public bool AlreadyTakedZombieHead() { return hasTakedZombieHead; }
+
+        public bool AlreadyClearGem() { return hasClearGem; }
+
+        public bool AlreadyFinishedGame() { return hasFinishedGame; }
     }
 }
