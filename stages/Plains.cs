@@ -27,7 +27,7 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(new StageMenuItem("Ir para Norte", _ => this.montainsideInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
             menuItemList.Add(new StageMenuItem("Ir para Sul", _ => this.townInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
             menuItemList.Add(new StageMenuItem("Ir para Leste", _ => this.chapelInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
-            menuItemList.Add(new StageMenuItem("Ir para Oeste", _ => this.ShowStageMessage(), EventType.Text, true));
+            menuItemList.Add(new StageMenuItem("Ir para Oeste", _ => this.swampInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
             menuItemList.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
         }
 

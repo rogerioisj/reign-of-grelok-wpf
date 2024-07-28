@@ -27,7 +27,7 @@ namespace reign_of_grelok_wpf
             stateManagement = new Management();
             town = new Town(inventory, stateManagement, MenuUpdated);
             chapel = new Chapel(inventory, stateManagement, MenuUpdated);
-            swamp = new Swamp(inventory, stateManagement);
+            swamp = new Swamp(inventory, stateManagement, MenuUpdated);
             montainside = new Montainside(inventory, stateManagement, MenuUpdated);
             plains = new Plains(inventory, town, chapel, swamp, montainside);
 
