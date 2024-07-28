@@ -1,223 +1,160 @@
-﻿using reign_of_grelok_wpf.state;
+﻿using reign_of_grelok_wpf.infoModel;
+using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
-    class Town
+    class Town : IStage
     {
+        public event EventHandler MenuUpdated;
+
         private Inventory inventoryInstance;
         private Management stateManagementInstance;
+        private StageMenuItem lookAround;
+        private StageMenuItem talkToBlackSmith;
+        private StageMenuItem talkToPriest;
+        private List<StageMenuItem> menuItemList;
+        private Dictionary<string, MenuItem> menuToBeExported;
 
-        public Town(Inventory inventory, Management management)
+        public Town(Inventory inventory, Management management, EventHandler handler)
         {
             this.inventoryInstance = inventory;
             this.stateManagementInstance = management;
+            this.MenuUpdated = handler;
+
+            lookAround = new StageMenuItem("Olhar ao redor", _ => ShowStageMessage(), EventType.Text, true);
+            talkToBlackSmith = new StageMenuItem("Falar com ferreiro", _ => ShowBlacksmithMessage(), EventType.Text, false);
+            talkToPriest = new StageMenuItem("Falar com padre", _ => ShowPriestMessage(), EventType.Text, false);
+
+            menuToBeExported = new Dictionary<string, MenuItem>();
+            menuItemList = new List<StageMenuItem>();
+            menuItemList.Add(lookAround);
+            menuItemList.Add(talkToBlackSmith);
+            menuItemList.Add(talkToPriest);
         }
-        public void Load(CallbackStageMenu callback)
+
+        public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
-            Console.WriteLine("REINO DE GRELOK (beta v.632)");
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("\nCidade");
-            Console.WriteLine("------------------------------------");
-            Console.WriteLine("Pressione de acordo com o destino:");
-            Console.WriteLine("1 - Olhar ao redor");
-            if (stateManagementInstance.AlreadyCheckTown())
+            var availableMenu = this.getMenuAvailable(backAction);
+            var stage = new StageInfo("Cidade", availableMenu);
+
+            return stage;
+        }
+
+        private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
+        {
+            menuToBeExported.Clear();
+            menuItemList.ForEach(delegate (StageMenuItem item)
             {
-                Console.WriteLine("2 - Falar com ferreiro");
-                Console.WriteLine("3 - Falar com padre");
-            }
-            Console.WriteLine("4 - Ir para Norte");
-            Console.WriteLine("I - Iventário");
-            Console.WriteLine("Q - Sair");
-            var keyInfo = Console.ReadKey();
-            var key = keyInfo.KeyChar;
+                if (item.isAvailable)
+                {
+                    menuToBeExported.Add(item.Title, item.GetMenuItem());
+                }
+            });
 
-            this.LoadOptions(key, callback);
+            menuToBeExported.Add("Ir para Norte", new MenuItem("Ir para Norte", _ => backAction(null), EventType.Load));
+            menuToBeExported.Add("Inventário", new MenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo(backAction)), EventType.Load));
+
+            return menuToBeExported;
         }
 
-        private void LoadOptions(char key, CallbackStageMenu callback)
+        private string ShowStageMessage()
         {
-            switch (key)
-            {
-                case '1':
-                    this.ShowStageMessage();
-                    this.Load(callback);
-                    break;
-                case '2':
-                    this.CheckIfOptionIsAvailable(
-                            this.stateManagementInstance.AlreadyCheckTown(),
-                            callback
-                            );
-                    this.ShowBlacksmithMessage();
-                    this.Load(callback);
-                    break;
-                case '3':
-                    this.CheckIfOptionIsAvailable(
-                            this.stateManagementInstance.AlreadyCheckTown(),
-                            callback
-                            );
-                    this.ShowPriestMessage();
-                    this.Load(callback);
-                    break;
-                case '4':
-                    Console.Clear();
-                    callback();
-                    break;
-                case 'q':
-                case 'Q':
-                    Environment.Exit(0);
-                    break;
-                case 'i':
-                case 'I':
-                    Console.Clear();
-                    //this.inventoryInstance.Load(_ => this.Load(callback));
-                    break;
-                default:
-                    Console.Clear();
-                    Console.WriteLine("Opção inválida!\n\n\n");
-                    this.Load(callback);
-                    break;
-            }
-        }
+            stateManagementInstance.SeeTown();
+            talkToBlackSmith.isAvailable = true;
+            talkToPriest.isAvailable = true;
+            OnMenuUpdated();
+            return "Você olha ao seu redor...\n\n\n" +
 
-        private void CheckIfOptionIsAvailable(bool option, CallbackStageMenu callback)
-        {
-            if (!option)
-            {
-                Console.Clear();
-                Console.WriteLine("Opção inválida!\n\n\n");
-                this.Load(callback);
-            }
-        }
-
-        private void ShowStageMessage()
-        {
-            Console.Clear();
-            Console.WriteLine("Você olha ao seu redor...\n\n");
-            Console.WriteLine(
                 "Você está na poeirenta praça do mercado de uma cidade tranquila. " +
                 "Muitas das lojas e casas estão abandonadas, e os cidadãos que podem ser vistos falam em voz baixa, lançando olhares furtivos para o horizonte escuro no extremo norte. " +
                 "O toque de uma bigorna quebra regularmente o silêncio, onde um ferreiro bigodudo se debruça sobre o seu trabalho numa tenda próxima.\r\n\r\n" +
                 "O ferreiro está aqui, trabalhando.\r\n\r\n" +
-                "Um padre está aqui, bebendo."
-             );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
-            this.stateManagementInstance.SeeTown();
+                "Um padre está aqui, bebendo.";
         }
 
-        private void ShowBlacksmithMessage()
+        private string ShowBlacksmithMessage()
         {
-            if (this.stateManagementInstance.AlreadyClearGem() && this.inventoryInstance.HasRefinedGem())
+            if (stateManagementInstance.AlreadyClearGem() && inventoryInstance.HasRefinedGem())
             {
-                this.ShowBlacksmithMessageWithGem();
-                return;
+                return ShowBlacksmithMessageWithGem();
+                
             }
 
-            this.ShowStandardBlacksmithMessage();
+            return ShowStandardBlacksmithMessage();
         }
 
-        private void ShowStandardBlacksmithMessage()
+        private string ShowStandardBlacksmithMessage()
         {
-            Console.Clear();
-            Console.Write("Você se aproxima do ferreiro...\n\n\n");
-            Console.WriteLine(
-                "Seus olhos lacrimejam por causa da fumaça e do calor bajulador dentro da tenda. " +
+            return "Você se aproxima do ferreiro...\n\n\n" +
+            "Seus olhos lacrimejam por causa da fumaça e do calor bajulador dentro da tenda. " +
                 "O homem enorme enxuga o suor da cabeça careca e levanta os olhos do trabalho.\r\n\r\n\"" +
                 "Não falta trabalho a ser feito com Grelok assustando todo mundo. Deixe-me cumprir meus pedidos, estranho.\" " +
-                "Com isso, o ferreiro dispensa você de sua tenda e molha uma lâmina quente em água, sibilando com vapor."
-             );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
+                "Com isso, o ferreiro dispensa você de sua tenda e molha uma lâmina quente em água, sibilando com vapor.";
         }
 
-        private void ShowBlacksmithMessageWithGem()
+        private string ShowBlacksmithMessageWithGem()
         {
-            Console.Clear();
-            Console.Write("Você se aproxima do ferreiro...\n\n\n");
-            Console.WriteLine(
+            inventoryInstance.ForgeMagicalSword();
+            return "Você se aproxima do ferreiro...\n\n\n" +
                 "O ferreiro olha para você rispidamente e está prestes a dispensá-lo quando você tira a pedra preciosa polida de sua bolsa. " +
                 "Ele deixa o martelo de lado e torce o bigode.\r\n\r\n\"" +
                 "Uma pedra muito boa, claro.\" Ele diz, admirando a pedra lapidada: \"" +
                 "Do que você estaria precisando, então?\"\r\n\r\n" +
-                "Seguindo suas instruções cuidadosas, o ferreiro reforja sua espada enferrujada com o fragmento mágico no centro da lâmina."
-            );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
-            this.inventoryInstance.ForgeMagicalSword();
+                "Seguindo suas instruções cuidadosas, o ferreiro reforja sua espada enferrujada com o fragmento mágico no centro da lâmina.";
         }
 
-        private void ShowPriestMessage()
+        private string ShowPriestMessage()
         {
-            if (this.inventoryInstance.HasKey() && this.stateManagementInstance.AlreadyKilledZombie())
+            if (inventoryInstance.HasKey() && stateManagementInstance.AlreadyKilledZombie())
             {
-                this.ShowZombieHeadWithItemPriestMessage();
-                return;
+                return ShowZombieHeadWithItemPriestMessage();
             }
 
-            if (this.stateManagementInstance.AlreadyKilledZombie())
+            if (stateManagementInstance.AlreadyKilledZombie())
             {
-                this.ShowZombieHeadWithoutItemPriestMessage();
-                return;
+                return ShowZombieHeadWithoutItemPriestMessage();
             }
-            this.ShowStandardPriestMessage();
+
+            return ShowStandardPriestMessage();
         }
 
-        private void ShowStandardPriestMessage()
+        private string ShowStandardPriestMessage()
         {
-            Console.Clear();
-            Console.Write("Você se aproxima do clérigo...\n\n\n");
-            Console.WriteLine(
-                "O padre percebe sua aproximação e levanta os olhos do seu gole.\r\n" +
+            return "Você se aproxima do clérigo...\n\n\n" +
+            "O padre percebe sua aproximação e levanta os olhos do seu gole.\r\n" +
                 "“Grelok chegou e estamos abandonados!”, ele grita. " +
                 "“Urp!”, ele continua.\r\n\r\n" +
                 "Ao se recuperar do fedor do arroto sacerdotal, você é informado de que o padre fugiu de sua capela próxima. " +
                 "Quando Grelok chegou à montanha, os mortos em seu cemitério começaram a se levantar e sua congregação se dispersou.\r\n\r\n" +
-                "“Se você pudesse livrar o lugar dos zumbis”, ele lhe diz, “eu te darei a chave, e você pode ir ao boticário”"
-             );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
+                "“Se você pudesse livrar o lugar dos zumbis”, ele lhe diz, “eu te darei a chave, e você pode ir ao boticário”";
         }
 
-        private void ShowZombieHeadWithoutItemPriestMessage()
+        private string ShowZombieHeadWithoutItemPriestMessage()
         {
-            Console.Clear();
-            Console.Write("Você se aproxima do clérigo...\n\n\n");
-            Console.WriteLine("O padre amaldiçoa bêbado os mortos-vivos que contaminaram sua igreja. " +
+            inventoryInstance.GetKey();
+            return "Você se aproxima do clérigo...\n\n\n" +
+            "O padre amaldiçoa bêbado os mortos-vivos que contaminaram sua igreja. " +
                 "Você apresenta a ele a cabeça decapitada do zumbi que está em sua bolsa.\r\n\r\n" +
                 "“Louvado seja você!”, ele soluça. " +
                 "“Talvez a influência de Grelok não seja tão forte!”. " +
                 "Com isso, ele vira sua garrafa de cabeça para baixo e a joga na lareira, onde ela explode em chamas roxas e queima quase instantaneamente.\r\n\r\n\"" +
                 "Devo reunir os fiéis.\" " +
                 "Ele pressiona uma chave de latão na palma da sua mão:" +
-                " \"Por favor, sirva-se do pouco que puder ser útil em minha capela.\""
-            );
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
-            this.inventoryInstance.GetKey();
+                " \"Por favor, sirva-se do pouco que puder ser útil em minha capela.\"";
         }
 
-        private void ShowZombieHeadWithItemPriestMessage()
+        private string ShowZombieHeadWithItemPriestMessage()
         {
-            Console.Clear();
-            Console.Write("Você se aproxima do clérigo...\n\n\n");
-            Console.WriteLine("O padre está bebendo água, debruçado sobre um grosso volume encadernado em couro preso ao pescoço por uma grossa tira de couro. " +
+            return "Você se aproxima do clérigo...\n\n\n" +
+            "O padre está bebendo água, debruçado sobre um grosso volume encadernado em couro preso ao pescoço por uma grossa tira de couro. " +
                 "Ele percebe você apenas quando você chega muito perto.\r\n\r\n\"" +
                 "Ah, bom amigo! Você já foi abrir a capela? " +
-                "Meu corpo ainda dói de tanto beber, infelizmente, mas logo reunirei a congregação e voltarei sozinho.\"");
-            Console.WriteLine();
-            Console.WriteLine("\n\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
-            Console.Clear();
+                "Meu corpo ainda dói de tanto beber, infelizmente, mas logo reunirei a congregação e voltarei sozinho.\"";
+        }
+
+        protected virtual void OnMenuUpdated()
+        {
+            MenuUpdated?.Invoke(this, EventArgs.Empty);
         }
     }
 }
