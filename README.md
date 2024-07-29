@@ -1,5 +1,5 @@
 # About
-Text game based on the namesake of the Fallout 3 mini game. Builded with C# and .NET 8
+Text game based on the namesake of the Fallout 3 mini game. Builded with C#, .NET 8 and WPF.
 
 # Requisites
 - .Net framework
