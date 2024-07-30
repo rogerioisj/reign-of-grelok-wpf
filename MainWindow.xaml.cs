@@ -22,6 +22,7 @@ namespace reign_of_grelok_wpf
         private Montainside montainside;
         private Plains plains;
         private StageInfo stageInfo;
+
         public MainWindow()
         {
             inventory = new Inventory();
@@ -42,6 +43,11 @@ namespace reign_of_grelok_wpf
             MapLocaleName.Content = stageInfo.GetStageName();
         }
 
+        /// <summary>
+        /// Function to get updates for menu.
+        /// </summary>
+        /// <param name="sender">Object whos call this function.</param>
+        /// <param name="e">Event param object. Ignore here.</param>
         private void MenuUpdated(object sender, EventArgs e)
         {
             if (stateManagement.AlreadyFinishedGame())
@@ -60,6 +66,11 @@ namespace reign_of_grelok_wpf
             }
         }
 
+        /// <summary>
+        /// Method to handle with button clicks
+        /// </summary>
+        /// <param name="sender">The button element</param>
+        /// <param name="e">Event param object. Ignore here.</param>
         private async void EventMessageButtonChange(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
@@ -97,6 +108,11 @@ namespace reign_of_grelok_wpf
             }
         }
 
+        /// <summary>
+        /// Method to show text in `EventDesciptionTextBox` element with typewriter effect.
+        /// </summary>
+        /// <param name="text">Text to be presented</param>
+        /// <returns></returns>
         private async Task ShowTextWithTypingEffect(string text)
         {
             EventDesciptionTextBox.Text = string.Empty;
@@ -104,7 +120,7 @@ namespace reign_of_grelok_wpf
             foreach (char c in text)
             {
                 EventDesciptionTextBox.Text += c;
-                await Task.Delay(50); // Adjust the delay to control typing speed
+                await Task.Delay(50);
             }
         }
     }
