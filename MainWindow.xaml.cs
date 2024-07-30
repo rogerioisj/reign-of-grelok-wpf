@@ -60,7 +60,7 @@ namespace reign_of_grelok_wpf
             }
         }
 
-        private void EventMessageButtonChange(object sender, RoutedEventArgs e)
+        private async void EventMessageButtonChange(object sender, RoutedEventArgs e)
         {
             if (sender is Button button)
             {
@@ -71,7 +71,8 @@ namespace reign_of_grelok_wpf
                 if (type == EventType.Text)
                 {
                     var action = stageInfo.GetShowTextAction(key);
-                    EventDesciptionTextBox.Text = action(null);
+                    var eventText = action(null);
+                    await ShowTextWithTypingEffect(eventText);
                     return;
                 }
 
@@ -93,6 +94,17 @@ namespace reign_of_grelok_wpf
 
                     return;
                 }
+            }
+        }
+
+        private async Task ShowTextWithTypingEffect(string text)
+        {
+            EventDesciptionTextBox.Text = string.Empty;
+
+            foreach (char c in text)
+            {
+                EventDesciptionTextBox.Text += c;
+                await Task.Delay(50); // Adjust the delay to control typing speed
             }
         }
     }
