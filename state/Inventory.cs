@@ -3,8 +3,15 @@ using reign_of_grelok_wpf.stages;
 
 namespace reign_of_grelok_wpf.state
 {
+    /// <summary>
+    /// Delgate to handle with back action.
+    /// </summary>
+    /// <param name="key">Optional parameter for return stages except for plains.</param>
     delegate void CallbackStageMenu(char? key);
 
+    /// <summary>
+    /// Logical behavior for inventory.
+    /// </summary>
     class Inventory
     {
         private InventoryItem rustSword;
@@ -43,6 +50,11 @@ namespace reign_of_grelok_wpf.state
             itens.Add(fullFlask.name, fullFlask);
         }
 
+        /// <summary>
+        /// Handles with menu to be presented.
+        /// </summary>
+        /// <param name="backEvent">Method to be called at when back button be pressed.</param>
+        /// <returns></returns>
         public StageInfo LoadStageInfo(LoadStageAction backEvent)
         {
             var availableMenu = this.getMenuAvailable(backEvent);
@@ -51,6 +63,11 @@ namespace reign_of_grelok_wpf.state
             return stage;
         }
 
+        /// <summary>
+        /// Method to load only available options for menu.
+        /// </summary>
+        /// <param name="backEvent"></param>
+        /// <returns></returns>
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backEvent)
         {
             var menuParsed = new Dictionary<string, MenuItem>();
@@ -65,28 +82,48 @@ namespace reign_of_grelok_wpf.state
             return menuParsed;
         }
 
+        /// <summary>
+        /// Method to show item description.
+        /// </summary>
+        /// <param name="key">Dictionary key to be search</param>
+        /// <returns></returns>
         private string showItemDescription(string key)
         {
             var item = itens[key];
             return item.description;
         }
 
+        /// <summary>
+        /// Method to set as available, zombie head item
+        /// </summary>
         public void GetZombieHead() { this.zombieHead.available = true; }
 
+        /// <summary>
+        /// Method to set as available, full flask item and  remove drinkingFlask
+        /// </summary>
         public void FulfillFlask()
         {
             this.drinkingFlask.available = false;
             this.fullFlask.available = true;
         }
 
+        /// <summary>
+        /// Method to set as available, brass key item and remove zombie head.
+        /// </summary>
         public void GetKey()
         {
             this.brassKey.available = true;
             this.zombieHead.available = false;
         }
 
+        /// <summary>
+        /// Method to set as available, raw gem stone item.
+        /// </summary>
         public void GetGem() { this.rawGemStone.available = true; }
 
+        /// <summary>
+        /// Method to set as available, refined gem stone and magical shard. Removes raw gem stone item.
+        /// </summary>
         public void RefineGem()
         {
             this.rawGemStone.available = false;
@@ -94,6 +131,9 @@ namespace reign_of_grelok_wpf.state
             this.magicalShard.available = true;
         }
 
+        /// <summary>
+        /// Method to set as available, magical sword item. Removes rust sword, magical shard and refined gem stone.
+        /// </summary>
         public void ForgeMagicalSword()
         {
             this.magicSword.available = true;
@@ -102,15 +142,28 @@ namespace reign_of_grelok_wpf.state
             this.refinedGemStone.available = false;
         }
 
-        public bool HasZombieHead() { return this.zombieHead.available; }
-
+        /// <summary>
+        /// Method to check if the player has brass key in inventory.
+        /// </summary>
+        /// <returns>A bool confirming</returns>
         public bool HasKey() { return this.brassKey.available; }
 
+        /// <summary>
+        /// Method to check if the player has refined gem in inventory.
+        /// </summary>
+        /// <returns>A bool confirming</returns>
         public bool HasRefinedGem() { return this.refinedGemStone.available; }
 
+        /// <summary>
+        /// Method to check if the player has magical sword in inventory.
+        /// </summary>
+        /// <returns>A bool confirming</returns>
         public bool HasMagicalSword() { return this.magicSword.available; }
     }
 
+    /// <summary>
+    /// Class to handle with itens for inventory.
+    /// </summary>
     class InventoryItem
     {
         public string name { get; }
