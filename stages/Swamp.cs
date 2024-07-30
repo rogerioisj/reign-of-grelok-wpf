@@ -135,8 +135,6 @@ namespace reign_of_grelok_wpf.stages
 
         private string ShowWizardPostClearGemMessage()
         {
-            inventoryInstance.RefineGem();
-            stateManagementInstance.ClearGem();
             return "Você fala com o mago...\n\n\n" +
                 "\"Leve você a uma ferraria! Forje o fragmento com a espada e derrote Grelok!\"\r\n\r\nO mago joga algumas pedras para afastá-lo e se ocupa em conjurar nuvens coloridas de fumaça.";
         }
