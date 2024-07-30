@@ -3,6 +3,7 @@ using reign_of_grelok_wpf.stages;
 using reign_of_grelok_wpf.state;
 using System.Collections.ObjectModel;
 using System.Windows;
+using MahApps.Metro.Controls;
 using System.Windows.Controls;
 
 namespace reign_of_grelok_wpf
@@ -10,7 +11,7 @@ namespace reign_of_grelok_wpf
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public ObservableCollection<string> Menu { get; private set; }
         private Management stateManagement;
