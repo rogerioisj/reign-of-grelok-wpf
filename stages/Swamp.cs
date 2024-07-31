@@ -3,6 +3,9 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
+    /// <summary>
+    /// Swamp stage
+    /// </summary>
     class Swamp : IStage
     {
         public event EventHandler MenuUpdated;
@@ -16,6 +19,12 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
+        /// <summary>
+        /// Swamp Stage constructor
+        /// </summary>
+        /// <param name="inventory"> An inventory instance</param>
+        /// <param name="management">A management state instance</param>
+        /// <param name="handler">A event handler to load new menu options from ui</param>
         public Swamp(Inventory inventory, Management management, EventHandler handler)
         {
             MenuUpdated = handler;
@@ -31,6 +40,11 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(talkToWizard);
         }
 
+        /// <summary>
+        /// A method to load stage infos.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>StageInfo instance</returns>
         public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
             var availableMenu = getMenuAvailable(backAction);
@@ -39,6 +53,11 @@ namespace reign_of_grelok_wpf.stages
             return stage;
         }
 
+        /// <summary>
+        /// Method to get all menu options available.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>A Dictionary<string, MenuItem> instance</returns>
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
             menuToBeExported.Clear();
@@ -56,11 +75,19 @@ namespace reign_of_grelok_wpf.stages
             return menuToBeExported;
         }
 
+        /// <summary>
+        /// A method to present the stage message and load the new menu options
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStageMessage()
         {
             return ShowStandardStageMessage();
         }
 
+        /// <summary>
+        /// Method to get deafult stage message
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStandardStageMessage()
         {
             stateManagementInstance.SeeSwamp();
@@ -78,6 +105,10 @@ namespace reign_of_grelok_wpf.stages
                 "Um mago está aqui, gesticulando loucamente em sua varanda.";
         }
 
+        /// <summary>
+        /// Method to get message from wizard
+        /// </summary>
+        /// <returns>Text with wizard</returns>
         private string ShowWizardMessage()
         {
             if (stateManagementInstance.AlreadyTalkedToWizard() && stateManagementInstance.AlreadyClearGem())
@@ -98,6 +129,10 @@ namespace reign_of_grelok_wpf.stages
             return ShowWizardStandardMessage();
         }
 
+        /// <summary>
+        /// Method to get message from wizard
+        /// </summary>
+        /// <returns>Text with wizard</returns>
         private string ShowWizardStandardMessage()
         {
             stateManagementInstance.TalkToWizard();
@@ -111,12 +146,20 @@ namespace reign_of_grelok_wpf.stages
                 "Em breve - nunca consegui cumprir uma profecia antes!\"";
         }
 
+        /// <summary>
+        /// Method to get message from wizard talk with him for the first time
+        /// </summary>
+        /// <returns>Text with wizard</returns>
         private string ShowWizardPostActionMessage()
         {
             return "Você fala com o mago...\n\n\n" +
             "O mago está enxotando você, com as mangas balançando.\r\n\r\n\"Vá! Encontre a pedra preciosa e volte, para que eu possa fazer minha parte!\"";
         }
 
+        /// <summary>
+        /// Method to get message from wizard with the raw gem
+        /// </summary>
+        /// <returns>Text with wizard</returns>
         private string ShowWizardWithGemMessage()
         {
             inventoryInstance.RefineGem();
@@ -133,12 +176,19 @@ namespace reign_of_grelok_wpf.stages
                 "Ele joga as pedras nas quais você salta para pegá-las com segurança.";
         }
 
+        /// <summary>
+        /// Method to get message from wizard after clear the raw gem
+        /// </summary>
+        /// <returns>Text with wizard</returns>
         private string ShowWizardPostClearGemMessage()
         {
             return "Você fala com o mago...\n\n\n" +
                 "\"Leve você a uma ferraria! Forje o fragmento com a espada e derrote Grelok!\"\r\n\r\nO mago joga algumas pedras para afastá-lo e se ocupa em conjurar nuvens coloridas de fumaça.";
         }
 
+        /// <summary>
+        /// Method to update menu options from ui
+        /// </summary>
         protected virtual void OnMenuUpdated()
         {
             MenuUpdated?.Invoke(this, EventArgs.Empty);
