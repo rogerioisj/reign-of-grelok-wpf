@@ -3,6 +3,9 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
+    /// <summary>
+    /// Town Stage
+    /// </summary>
     class Town : IStage
     {
         public event EventHandler MenuUpdated;
@@ -15,6 +18,12 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
+        /// <summary>
+        /// Town Stage constructor
+        /// </summary>
+        /// <param name="inventory"> An inventory instance</param>
+        /// <param name="management">A management state instance</param>
+        /// <param name="handler">A event handler to load new menu options from ui</param>
         public Town(Inventory inventory, Management management, EventHandler handler)
         {
             this.inventoryInstance = inventory;
@@ -32,6 +41,11 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(talkToPriest);
         }
 
+        /// <summary>
+        /// A method to load stage infos.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>StageInfo instance</returns>
         public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
             var availableMenu = this.getMenuAvailable(backAction);
@@ -40,6 +54,11 @@ namespace reign_of_grelok_wpf.stages
             return stage;
         }
 
+        /// <summary>
+        /// Method to get all menu options available.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>A Dictionary<string, MenuItem> instance</returns>
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
             menuToBeExported.Clear();
@@ -57,6 +76,10 @@ namespace reign_of_grelok_wpf.stages
             return menuToBeExported;
         }
 
+        /// <summary>
+        /// A method to present the stage message and load the new menu options
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStageMessage()
         {
             stateManagementInstance.SeeTown();
@@ -72,6 +95,10 @@ namespace reign_of_grelok_wpf.stages
                 "Um padre está aqui, bebendo.";
         }
 
+        /// <summary>
+        /// A method to show some text when the player talk to blacksmith
+        /// </summary>
+        /// <returns>A text based in what already happens</returns>
         private string ShowBlacksmithMessage()
         {
             if (stateManagementInstance.AlreadyClearGem() && inventoryInstance.HasRefinedGem())
@@ -83,6 +110,10 @@ namespace reign_of_grelok_wpf.stages
             return ShowStandardBlacksmithMessage();
         }
 
+        /// <summary>
+        /// Method to get default message when talk to blacksmith
+        /// </summary>
+        /// <returns>Blacksmith text</returns>
         private string ShowStandardBlacksmithMessage()
         {
             return "Você se aproxima do ferreiro...\n\n\n" +
@@ -92,6 +123,10 @@ namespace reign_of_grelok_wpf.stages
                 "Com isso, o ferreiro dispensa você de sua tenda e molha uma lâmina quente em água, sibilando com vapor.";
         }
 
+        /// <summary>
+        /// Method to get message when talk to blacksmith after get gem from wizard
+        /// </summary>
+        /// <returns>Blacksmith text</returns>
         private string ShowBlacksmithMessageWithGem()
         {
             inventoryInstance.ForgeMagicalSword();
@@ -103,6 +138,10 @@ namespace reign_of_grelok_wpf.stages
                 "Seguindo suas instruções cuidadosas, o ferreiro reforja sua espada enferrujada com o fragmento mágico no centro da lâmina.";
         }
 
+        /// <summary>
+        /// A method to show some text when the player talk to priest
+        /// </summary>
+        /// <returns>A text based in what already happens</returns>
         private string ShowPriestMessage()
         {
             if (inventoryInstance.HasKey() && stateManagementInstance.AlreadyKilledZombie())
@@ -118,6 +157,10 @@ namespace reign_of_grelok_wpf.stages
             return ShowStandardPriestMessage();
         }
 
+        /// <summary>
+        /// Method to get default message when talk to priest
+        /// </summary>
+        /// <returns>Priest text</returns>
         private string ShowStandardPriestMessage()
         {
             return "Você se aproxima do clérigo...\n\n\n" +
@@ -129,6 +172,10 @@ namespace reign_of_grelok_wpf.stages
                 "“Se você pudesse livrar o lugar dos zumbis”, ele lhe diz, “eu te darei a chave, e você pode ir ao boticário”";
         }
 
+        /// <summary>
+        /// Method to get message when talk to preist after burn zombie head
+        /// </summary>
+        /// <returns>Priest message</returns>
         private string ShowZombieHeadWithoutItemPriestMessage()
         {
             inventoryInstance.GetKey();
@@ -143,6 +190,10 @@ namespace reign_of_grelok_wpf.stages
                 " \"Por favor, sirva-se do pouco que puder ser útil em minha capela.\"";
         }
 
+        /// <summary>
+        /// Method to get message when talk to preist after get zombie head
+        /// </summary>
+        /// <returns>Priest message</returns>
         private string ShowZombieHeadWithItemPriestMessage()
         {
             return "Você se aproxima do clérigo...\n\n\n" +
@@ -152,6 +203,9 @@ namespace reign_of_grelok_wpf.stages
                 "Meu corpo ainda dói de tanto beber, infelizmente, mas logo reunirei a congregação e voltarei sozinho.\"";
         }
 
+        /// <summary>
+        /// Method to update menu options from ui
+        /// </summary>
         protected virtual void OnMenuUpdated()
         {
             MenuUpdated?.Invoke(this, EventArgs.Empty);
