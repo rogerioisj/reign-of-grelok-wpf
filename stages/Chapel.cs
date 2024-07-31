@@ -3,6 +3,9 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
+    /// <summary>
+    /// Chapel stage
+    /// </summary>
     class Chapel : IStage
     {
         public event EventHandler MenuUpdated;
@@ -16,6 +19,12 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
+        /// <summary>
+        /// Chapel Stage constructor
+        /// </summary>
+        /// <param name="inventory"> An inventory instance</param>
+        /// <param name="management">A management state instance</param>
+        /// <param name="handler">A event handler to load new menu options from ui</param>
         public Chapel(Inventory inventory, Management management, EventHandler handler) { 
             inventoryInstance = inventory;
             stateManagementInstance = management;
@@ -34,6 +43,11 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(checkChapel);
         }
 
+        /// <summary>
+        /// A method to load stage infos.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>StageInfo instance</returns>
         public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
             var availableMenu = getMenuAvailable(backAction);
@@ -42,6 +56,11 @@ namespace reign_of_grelok_wpf.stages
             return stage;
         }
 
+        /// <summary>
+        /// Method to get all menu options available.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>A Dictionary<string, MenuItem> instance</returns>
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
             menuToBeExported.Clear();
@@ -59,6 +78,10 @@ namespace reign_of_grelok_wpf.stages
             return menuToBeExported;
         }
 
+        /// <summary>
+        /// A method to present the stage message and load the new menu options
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStageMessage()
         {
             if (stateManagementInstance.AlreadyKilledZombie() && stateManagementInstance.AlreadyUsedKey())
@@ -79,6 +102,10 @@ namespace reign_of_grelok_wpf.stages
             return ShowStandardStageMessage();
         }
 
+        /// <summary>
+        /// Method to get default stage message
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStandardStageMessage()
         {
             stateManagementInstance.SeeChapel();
@@ -98,6 +125,10 @@ namespace reign_of_grelok_wpf.stages
                 "Há uma cova aberta nas proximidades.";
         }
 
+        /// <summary>
+        /// Method to get stage message after kill zombie
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowPostActionStageMessage()
         {
             stateManagementInstance.SeeChapel();
@@ -111,6 +142,10 @@ namespace reign_of_grelok_wpf.stages
                 "Há uma cova aberta nas proximidades.";
         }
 
+        /// <summary>
+        /// Method to get stage message after get the key from priest
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowPostActionWithKeyStageMessage()
         {
             stateManagementInstance.SeeChapel();
@@ -131,6 +166,10 @@ namespace reign_of_grelok_wpf.stages
                 "Há uma cova aberta nas proximidades.";
         }
 
+        /// <summary>
+        /// Method to get stage message after open chapel doors
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowPostActionOpenDoorsStageMessage()
         {
             return "Você olha ao seu redor...\n\n" +
@@ -144,6 +183,10 @@ namespace reign_of_grelok_wpf.stages
                 "Há uma cova aberta nas proximidades.";
         }
 
+        /// <summary>
+        /// Method to select wich message will be presented
+        /// </summary>
+        /// <returns>Grave message</returns>
         private string ShowGraveMessage()
         {
             if (stateManagementInstance.AlreadyKilledZombie() && stateManagementInstance.AlreadyTakedZombieHead())
@@ -159,6 +202,10 @@ namespace reign_of_grelok_wpf.stages
             return ShowStandardGraveMessage();
         }
 
+        /// <summary>
+        /// Grave message before kill the zombie
+        /// </summary>
+        /// <returns>Grave message</returns>
         private string ShowStandardGraveMessage()
         {
             return "Você olha ao seu redor...\n\n" +
@@ -166,6 +213,10 @@ namespace reign_of_grelok_wpf.stages
             "Vários ratos inchados flutuando em trinta centímetros de água suja no fundo. Não caia!";
         }
 
+        /// <summary>
+        /// Grave message after kill the zombie
+        /// </summary>
+        /// <returns>Grave message</returns>
         private string ShowPostActionGraveMessage()
         {
             inventoryInstance.GetZombieHead();
@@ -177,6 +228,10 @@ namespace reign_of_grelok_wpf.stages
                 "Você embala o troféu horrível como prova de sua ação.";
         }
 
+        /// <summary>
+        /// Grave message after kill the zombie and remove his head
+        /// </summary>
+        /// <returns>Grave message</returns>
         private string ShowPostActionGraveWithoutItemMessage()
         {
             return "Você espia dentro da cova aberta...\n\n" +
@@ -184,6 +239,10 @@ namespace reign_of_grelok_wpf.stages
                 "Vários ratos inchados e um cadáver de zumbi flutuam em trinta centímetros de água suja no fundo. Não caia!";
         }
 
+        /// <summary>
+        /// Method to kill zombie
+        /// </summary>
+        /// <returns>Zombie attack message</returns>
         private string AttackZombie()
         {
             stateManagementInstance.KillZombie();
@@ -194,6 +253,10 @@ namespace reign_of_grelok_wpf.stages
             return "Seu golpe joga o zumbi em uma cova.";
         }
 
+        /// <summary>
+        /// Method to get a message when the Chapel is visited
+        /// </summary>
+        /// <returns>chapel message</returns>
         private string CheckChapel()
         {
             inventoryInstance.FulfillFlask();
@@ -204,6 +267,9 @@ namespace reign_of_grelok_wpf.stages
                 "Está cheio até a borda com água benta.";
         }
 
+        /// <summary>
+        /// Method to update menu options from ui
+        /// </summary>
         protected virtual void OnMenuUpdated()
         {
             MenuUpdated?.Invoke(this, EventArgs.Empty);

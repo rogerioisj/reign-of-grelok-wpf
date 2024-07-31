@@ -85,7 +85,7 @@ namespace reign_of_grelok_wpf.stages
         }
 
         /// <summary>
-        /// Method to get deafult stage message
+        /// Method to get default stage message
         /// </summary>
         /// <returns>Stage description</returns>
         private string ShowStandardStageMessage()
