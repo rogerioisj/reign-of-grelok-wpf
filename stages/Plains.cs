@@ -3,6 +3,9 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
+    /// <summary>
+    /// Plains Stage
+    /// </summary>
     class Plains
     {
         private Inventory inventoryInstance;
@@ -13,6 +16,14 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
+        /// <summary>
+        /// Plains stage constructor
+        /// </summary>
+        /// <param name="inventoryInstance">An inventory instance</param>
+        /// <param name="town">A Town stage instance</param>
+        /// <param name="chapel">A Chapel stage instance</param>
+        /// <param name="swamp">A Swamp stage instance</param>
+        /// <param name="montainside">A montainside stage instance</param>
         public Plains(Inventory inventoryInstance, Town town, Chapel chapel, Swamp swamp, Montainside montainside)
         {
             this.inventoryInstance = inventoryInstance;
@@ -31,6 +42,10 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(new StageMenuItem("Inventário", _ => this.inventoryInstance.LoadStageInfo(_ => this.LoadStageInfo()), EventType.Load, true));
         }
 
+        /// <summary>
+        /// A method to load stage infos.
+        /// </summary>
+        /// <returns>StageInfo instance</returns>
         public StageInfo LoadStageInfo()
         {
             var availableMenu = this.getMenuAvailable();
@@ -39,6 +54,10 @@ namespace reign_of_grelok_wpf.stages
             return stage;
         }
 
+        /// <summary>
+        /// Method to get all menu options available.
+        /// </summary>
+        /// <returns>A Dictionary<string, MenuItem> instance</returns>
         private Dictionary<string, MenuItem> getMenuAvailable()
         {
             menuToBeExported = new Dictionary<string, MenuItem>();
@@ -49,6 +68,10 @@ namespace reign_of_grelok_wpf.stages
             return menuToBeExported;
         }
 
+        /// <summary>
+        /// A method to present the stage message and load the new menu options
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStageMessage()
         {
             return "Você está em uma ampla planície. " +
