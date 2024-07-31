@@ -3,6 +3,9 @@ using reign_of_grelok_wpf.state;
 
 namespace reign_of_grelok_wpf.stages
 {
+    /// <summary>
+    /// Montainside stage
+    /// </summary>
     class Montainside : IStage
     {
         public event EventHandler MenuUpdated;
@@ -15,6 +18,12 @@ namespace reign_of_grelok_wpf.stages
         private List<StageMenuItem> menuItemList;
         private Dictionary<string, MenuItem> menuToBeExported;
 
+        /// <summary>
+        /// Montainside Stage constructor
+        /// </summary>
+        /// <param name="inventory"> An inventory instance</param>
+        /// <param name="management">A management state instance</param>
+        /// <param name="handler">A event handler to load new menu options from ui</param>
         public Montainside(Inventory inventory, Management management, EventHandler handler)
         {
             inventoryInstance = inventory;
@@ -32,6 +41,11 @@ namespace reign_of_grelok_wpf.stages
             menuItemList.Add(lookGem);
         }
 
+        /// <summary>
+        /// A method to load stage infos.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>StageInfo instance</returns>
         public StageInfo LoadStageInfo(LoadStageAction backAction)
         {
             var availableMenu = getMenuAvailable(backAction);
@@ -40,6 +54,11 @@ namespace reign_of_grelok_wpf.stages
             return stage;
         }
 
+        /// <summary>
+        /// Method to get all menu options available.
+        /// </summary>
+        /// <param name="backAction">A method to be called when back button is pressed</param>
+        /// <returns>A Dictionary<string, MenuItem> instance</returns>
         private Dictionary<string, MenuItem> getMenuAvailable(LoadStageAction backAction)
         {
             menuToBeExported.Clear();
@@ -57,6 +76,10 @@ namespace reign_of_grelok_wpf.stages
             return menuToBeExported;
         }
 
+        /// <summary>
+        /// A method to present the stage message and load the new menu options
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStageMessage()
         {
             if (this.stateManagementInstance.AlreadyTakedGem())
@@ -67,6 +90,10 @@ namespace reign_of_grelok_wpf.stages
             return this.ShowStandardStageMessage();
         }
 
+        /// <summary>
+        /// Method to get a message when Grelok is attacked
+        /// </summary>
+        /// <returns>Attack message</returns>
         private string ShowAttackGrelokMessage()
         {
             if (this.inventoryInstance.HasMagicalSword())
@@ -77,11 +104,19 @@ namespace reign_of_grelok_wpf.stages
             return this.ShowStandardAttackMessage();
         }
 
+        /// <summary>
+        /// Get deafult message when Grelok is attacked
+        /// </summary>
+        /// <returns>Default attack message</returns>
         private string ShowStandardAttackMessage()
         {
             return "Suas armas insignificantes são inúteis em Grelok.";
         }
 
+        /// <summary>
+        /// Get message when the player attack Grelok with the Magical Sword
+        /// </summary>
+        /// <returns>Attack message</returns>
         private string ShowMagicalSwordAttackMessage()
         {
             stateManagementInstance.FinishGame();
@@ -101,6 +136,10 @@ namespace reign_of_grelok_wpf.stages
                 "(Obrigado por jogar!)";
         }
 
+        /// <summary>
+        /// Method to get deafult stage message
+        /// </summary>
+        /// <returns>Stage description</returns>
         private string ShowStandardStageMessage()
         {
             this.stateManagementInstance.SeeMontainside();
@@ -113,6 +152,10 @@ namespace reign_of_grelok_wpf.stages
                 "Um brilho entre as rochas chama sua atenção.";
         }
 
+        /// <summary>
+        /// Method to get stage message without gem
+        /// </summary>
+        /// <returns>Stage description without gem</returns>
         private string ShowWithoutGemStageMessage()
         {
             return "Você olha ao seu redor...\n\n" +
@@ -122,6 +165,10 @@ namespace reign_of_grelok_wpf.stages
                 "Grelok está aqui, vomitando heresias.\r\n\r";
         }
 
+        /// <summary>
+        /// Method to get a message when payer get the gem
+        /// </summary>
+        /// <returns>Get gem action</returns>
         private string ShowGemMessage()
         {
             this.inventoryInstance.GetGem();
@@ -131,6 +178,9 @@ namespace reign_of_grelok_wpf.stages
             return "Você pega uma pedra preciosa bruta das rochas!";
         }
 
+        /// <summary>
+        /// Method to update menu options from ui
+        /// </summary>
         protected virtual void OnMenuUpdated()
         {
             MenuUpdated?.Invoke(this, EventArgs.Empty);
